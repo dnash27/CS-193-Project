@@ -8,40 +8,41 @@ I want to be able to host a home lab server on my personal computer that can do 
 
 ## How It Works
 
-A paragraph or a few bullets explaining what the software does at a
-high level. If you have a diagram, embed it here:
+It uses a Windows Task Scheduler task to run a powershell .ps1 file that restarts the laptop every night at whatever time you choose. Eventually this task will also be able to safely stop any servers running and start them back up.
 
 ![System diagram](docs/diagram.png)
 
 ## Tech Stack
 
-- **Language:** Bash
+- **Language:** Microsoft .ps1
 - **Libraries:** 
-- **External tools:** cron, tailscale, jellyfin
+- **External tools:** WindowsTaskScheduler, tailscale
 
 ## Setup
+Copy the files and place them onto your root Directory "C:"
 
-Step-by-step: how does someone who just cloned your repo get it
-running?
+create a WindowsTaskScheduler by:
+- pressing WIN + R and running taskschd.msc
+- click "create task" on the right (not basic task)
+- name it "Nightly Laptop Restart"
+- under the General tab choose "Run whether user is logged on or not" and "Run with highest privileges."
+- under the Triggers tab click new and begin the task on a scheduale (daily)
+- pick a time such as 5:00 AM
+- under the actions tab click new and set action to start a program
+- set the Program to: Powershell.exe
+- set the argument to: (Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
 
-```bash
-git clone https://github.com/you/your-project
-cd your-project
-./install.sh   # or whatever
-```
+& "C:\ServerMaintenance\scripts\restart.ps1") copy this whole thing
+
 
 ## Usage
 
-How to actually run the thing, with examples.
-
-```bash
-./backup.sh ~/Documents
-```
+Watch as your PC automatically restarts every night.
 
 ## Roadmap
 
-- [ ] Control Server Remotely with SSH
-- [ ] Print out a summary of what servers are runnung
+- [ ] Add scripts to stop running Minecraft server and restart once PC boots
+- [ ] Create Backups for the Minecraft server world
 
 ## Author
 
