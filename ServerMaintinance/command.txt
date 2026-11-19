@@ -1,0 +1,3 @@
+Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
+
+& "C:\ServerMaintinance\Scripts\install.ps1"
