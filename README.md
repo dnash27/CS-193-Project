@@ -1,6 +1,6 @@
 # Automatic Server
 
-A Script that executes nightly that restarts a computer and then turns on a server automaticaly.
+A Script that executes nightly that restarts a computer at a specified time.
 
 ## The Problem
 
@@ -14,26 +14,16 @@ It uses a Windows Task Scheduler task to run a powershell .ps1 file that restart
 
 ## Tech Stack
 
-- **Language:** Microsoft .ps1
-- **Libraries:** 
-- **External tools:** WindowsTaskScheduler, tailscale
+- **Language:** Microsoft .ps1, Java
+- **Libraries:** Javax.Swing
+- **External tools:** WindowsTaskScheduler
 
 ## Setup
-Copy the files and place them onto your root Directory "C:"
-
-create a WindowsTaskScheduler by:
-- pressing WIN + R and running taskschd.msc
-- click "create task" on the right (not basic task)
-- name it "Nightly Laptop Restart"
-- under the General tab choose "Run whether user is logged on or not" and "Run with highest privileges."
-- under the Triggers tab click new and begin the task on a scheduale (daily)
-- pick a time such as 5:00 AM
-- under the actions tab click new and set action to start a program
-- set the Program to: Powershell.exe
-- set the argument to: (Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
-
-& "C:\ServerMaintenance\scripts\restart.ps1") copy this whole thing
-
+1. Copy the files and place them onto your root Directory "C:"
+2. run the Install.java file in the terminal by running "java Install.java"
+3. enter the time you want the PC to be restarted at into the GUI (Example: 5:00)
+4. run the command given in the command.text file in powershell as an adminastrator
+5. you have now set up a scheduled task that restarts your laptop at a given time everyday.
 
 ## Usage
 
