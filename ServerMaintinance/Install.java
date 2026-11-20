@@ -72,6 +72,14 @@ public class Install {
                         ex.printStackTrace();
                         timeLabel.setText("Writing to file failed");
                     }
+                    ProcessBuilder pb = new ProcessBuilder("powershell.exe", "-NoProfile", "-Command",
+                            "Start-Process powershell.exe -Verb RunAs -ArgumentList '-NoProfile -ExecutionPolicy Bypass -File C:\\ServerMaintinance\\Scripts\\install.ps1'"
+                    );
+                    try {
+                        pb.start();
+                    } catch (Exception ex) {
+                        timeLabel.setText("Could not start command");
+                    }
                 }
             });
 

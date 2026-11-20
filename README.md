@@ -19,10 +19,12 @@ It uses a Windows Task Scheduler task to run a powershell .ps1 file that restart
 - **External tools:** WindowsTaskScheduler
 
 ## Setup
+* NOTE: you must be on a windows device to run this
+
 1. Copy the files and place them onto your root Directory "C:"
 2. run the Install.java file in the terminal by running "java Install.java"
 3. enter the time you want the PC to be restarted at into the GUI (Example: 5:00)
-4. run the command given in the command.text file in powershell as an adminastrator
+4. Allow the usage of Powershell as Adminastrator
 5. you have now set up a scheduled task that restarts your laptop at a given time everyday.
 
 ## Usage
