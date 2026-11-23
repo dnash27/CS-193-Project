@@ -1,10 +1,16 @@
 import javax.swing.*;
 import java.io.FileOutputStream;
 import java.io.PrintWriter;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
+import java.util.Locale;
 
 public class Install {
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
+            AtomicBoolean installed = new AtomicBoolean(false);
             JFrame frame = new JFrame("Install PC Auto Restart");
             frame.setSize(400, 300);
             frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -13,7 +19,7 @@ public class Install {
             JTextField restartTimeField = new JTextField(20);
             restartTimeField.setText("Enter A Restart Time");
 
-            JButton enter = new JButton("Enter");
+            JButton enter = new JButton("Install");
 
             JLabel timeLabel = new JLabel("Time: ");
 
@@ -24,22 +30,47 @@ public class Install {
             ampm.add(am);
             am.setSelected(true);
 
+            JButton uninstall = new JButton("uninstall");
+
             panel.add(restartTimeField);
-            panel.add(enter);
             panel.add(am);
             panel.add(pm);
+            panel.add(enter);
+            panel.add(uninstall);
             panel.add(timeLabel);
             frame.add(panel);
 
+            uninstall.addActionListener(e -> {
+                if (installed.get()) {
+                    timeLabel.setText("Uninstalling . . .");
+                    ProcessBuilder pb = new ProcessBuilder(
+                            "powershell.exe",
+                            "-NoProfile",
+                            "-Command",
+                            "Start-Process powershell.exe -Verb RunAs -ArgumentList '-NoProfile -ExecutionPolicy Bypass -File C:\\ServerMaintinance\\Scripts\\uninstallTask.ps1'"
+                    );
+                    try {
+                        pb.start();
+                        installed.set(true);
+                    } catch (Exception ex) {
+                        IO.println("Could not start command");
+                    }
+                    timeLabel.setText("Uninstalled successfully");
+                    installed.set(false);
+
+                } else {
+                    timeLabel.setText("Already Uninstalled");
+                }
+            });
+
             enter.addActionListener(e -> {
                 boolean valid = true;
-                String time = restartTimeField.getText();
-                int length = time.length();
-                String[] characters = new String[length];
-                for (int i = 0; i < length; i++) {
-                    characters[i] = "" + time.charAt(i);
-                }
-                if (length < 4 || length > 5) {
+                String time = restartTimeField.getText().trim();
+                String suffix = am.isSelected() ? "AM" : "PM";
+                try {
+                    DateTimeFormatter dtf = DateTimeFormatter.ofPattern("h:mm a", Locale.US);
+                    LocalTime.parse(time + " " + suffix, dtf);
+                } catch (Exception ex) {
                     valid = false;
                 }
                 String restartTime = "";
@@ -72,14 +103,19 @@ public class Install {
                         ex.printStackTrace();
                         timeLabel.setText("Writing to file failed");
                     }
-                    ProcessBuilder pb = new ProcessBuilder("powershell.exe", "-NoProfile", "-Command",
+                    ProcessBuilder pb = new ProcessBuilder(
+                            "powershell.exe",
+                            "-NoProfile",
+                            "-Command",
                             "Start-Process powershell.exe -Verb RunAs -ArgumentList '-NoProfile -ExecutionPolicy Bypass -File C:\\ServerMaintinance\\Scripts\\install.ps1'"
                     );
                     try {
                         pb.start();
+                        installed.set(true);
                     } catch (Exception ex) {
-                        timeLabel.setText("Could not start command");
+                        IO.println("Could not start command");
                     }
+                    timeLabel.setText("Installed Successfully");
                 }
             });
 
