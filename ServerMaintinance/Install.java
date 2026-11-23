@@ -4,13 +4,20 @@ import java.io.PrintWriter;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeParseException;
 import java.util.Locale;
 
-public class Install {
+public class InstallGUI {
     public static void main(String[] args) {
+        String folder = System.getProperty("user.dir");
+
+        String scriptsFolder = folder + "\\Scripts";
+
+        String installPath = scriptsFolder + "\\install.ps1";
+        String shutdownPath = scriptsFolder + "\\shutdown.ps1";
+        String uninstallPath = scriptsFolder + "\\uninstallTask.ps1";
+
         SwingUtilities.invokeLater(() -> {
-            AtomicBoolean installed = new AtomicBoolean(false);
+            AtomicBoolean installed = new AtomicBoolean(true);
             JFrame frame = new JFrame("Install PC Auto Restart");
             frame.setSize(400, 300);
             frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -47,7 +54,7 @@ public class Install {
                             "powershell.exe",
                             "-NoProfile",
                             "-Command",
-                            "Start-Process powershell.exe -Verb RunAs -ArgumentList '-NoProfile -ExecutionPolicy Bypass -File C:\\ServerMaintinance\\Scripts\\uninstallTask.ps1'"
+                            "Start-Process powershell.exe -Verb RunAs -ArgumentList '-NoProfile -ExecutionPolicy Bypass -File \""+ uninstallPath + "\"'"
                     );
                     try {
                         pb.start();
@@ -85,10 +92,10 @@ public class Install {
                     timeLabel.setText("Please Enter a valid time");
                 }
                 if (valid) {
-                    try (PrintWriter pw = new PrintWriter(new FileOutputStream("C:\\ServerMaintinance\\Scripts\\install.ps1"))) {
+                    try (PrintWriter pw = new PrintWriter(new FileOutputStream(installPath))) {
                         pw.println("$action = New-ScheduledTaskAction `");
                         pw.println("    -Execute \"powershell.exe\" `");
-                        pw.println("    -Argument \"-ExecutionPolicy Bypass -Command `\"& 'C:\\ServerMaintinance\\Scripts\\shutdown.ps1'`\"\"");
+                        pw.println("    -Argument \"-ExecutionPolicy Bypass -Command `\"& '" + shutdownPath + "'`\"\"");
                         pw.println();
                         pw.println("$trigger = New-ScheduledTaskTrigger -Daily -At \""
                                 + restartTime + "\"");
@@ -107,7 +114,7 @@ public class Install {
                             "powershell.exe",
                             "-NoProfile",
                             "-Command",
-                            "Start-Process powershell.exe -Verb RunAs -ArgumentList '-NoProfile -ExecutionPolicy Bypass -File C:\\ServerMaintinance\\Scripts\\install.ps1'"
+                            "Start-Process powershell.exe -Verb RunAs -ArgumentList '-NoProfile -ExecutionPolicy Bypass -File \"" + installPath + "\"'"
                     );
                     try {
                         pb.start();
