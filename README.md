@@ -28,6 +28,11 @@ It uses a Java Swing GUI to ask the user what time they would like to restart th
 
 *Uninstalling: press the uninstall button on the Java GUI and allow it to run as administrator
 
+* Starting Minecraft Server at startup
+1. Install a Minecraft server from https://fabricmc.net/use/server/ and put it on your root directory (C:)
+2. run the MCTaskInstall.java file from the terminal
+3. you now have a task that runs at login that starts the server
+
 ## Usage
 - choose whenever you want your pc to restart daily
 - uninstall whenever you want
@@ -38,8 +43,8 @@ It uses a Java Swing GUI to ask the user what time they would like to restart th
 4. from there you can run it now or delete it
 
 ## Roadmap
-
-- [ ] Add scripts to stop running Minecraft server and restart once PC boots
+- [x] Add a GUI to help the user Install the tasks
+- [x] Add scripts to Run the minecraft server at StartUp
 - [ ] Create Backups for the Minecraft server world
 
 ## Author
